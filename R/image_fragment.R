@@ -8,6 +8,7 @@
 #' @keywords fragmentation
 #' @export
 #' @examples
+#' library(magick)
 #' stimulus <- image_read_svg("http://jeroen.github.io/images/tiger.svg", width = 400)
 #'
 #' fragments <- image_fragment(stimulus, pixel_size = 20, levels = 10)
@@ -15,7 +16,7 @@
 image_fragment <- function(image, pixel_size, levels, pixel_colour = "white") {
 
   # Check if input image is of class magick image
-  stopifnot(class(image) == "magick-image")
+  stopifnot("Input image is not a magick image" = class(image) == "magick-image")
 
   bg_h <- magick::image_info(image)$height
   bg_w <- magick::image_info(image)$width
@@ -24,7 +25,7 @@ image_fragment <- function(image, pixel_size, levels, pixel_colour = "white") {
   square <- magick::image_blank(pixel_size, pixel_size, color = pixel_colour)
 
   # Add check to make sure that the image dimensions are evenly divisible by pixel size
-  stopifnot(bg_h %% pixel_size == 0, bg_w %% pixel_size == 0)
+  stopifnot("Pixel size not evenly divisible by image dimensions" = bg_h %% pixel_size == 0, bg_w %% pixel_size == 0)
 
   # Get whole grid of widths and heights
   gridcombos <- tibble::tibble(
@@ -45,6 +46,8 @@ image_fragment <- function(image, pixel_size, levels, pixel_colour = "white") {
   prop_vis <- rev(0.75^(levels - 1:levels))
   n_vis <- ceiling(nrow(img_squares) * prop_vis)
   n_vis_diffs <- n_vis[1:(levels-1)] - n_vis[2:levels]
+
+  if(any(n_vis_diffs == 0)) warning("Multiple image copies are equally fragmented. Try reducing the number of fragmentation levels")
 
   # Denote which frag level each circle will be visible in
   vis_squares <- img_squares
