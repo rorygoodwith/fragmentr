@@ -1,0 +1,19 @@
+Package: fragmentr
+Title: Create Fragmented Stimuli For Use in Psychological Experiments
+Version: 0.1.0
+Authors@R: 
+    person(given = "Rory",
+           family = "Spanton",
+           role = c("aut", "cre"),
+           email = "rorydata@gmail.com",
+           comment = c(ORCID = "0000-0002-4050-2166"))
+Description: TBC.
+License: `use_gpl3_license()`
+Encoding: UTF-8
+LazyData: true
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.1.1.9001
+Imports:
+        magick (>= 2.7.3),
+        dplyr (>= 1.0.0),
+        tibble
