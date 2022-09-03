@@ -5,6 +5,7 @@
 #' @param pixel_size a double representing the height and width of each image fragment
 #' @param levels the number of fragmentation levels to generate, inclusive of the fully revealed image
 #' @param pixel_colour a valid magick colour string such as "navyblue" or "#000000" that determines the fill colour of the obscured image fragments
+#' @param background_detect a logical value. When TRUE, image_fragment will discount white background segments when randomly assigning parts of the image to obscure.
 #' @keywords fragmentation
 #' @export
 #' @examples
@@ -13,7 +14,7 @@
 #'
 #' fragments <- image_fragment(stimulus, pixel_size = 20, levels = 10)
 
-image_fragment <- function(image, pixel_size, levels, pixel_colour = "white") {
+image_fragment <- function(image, pixel_size, levels, pixel_colour = "white", background_detect = TRUE) {
 
   # Check if input image is of class magick image
   stopifnot("Input image is not a magick image" = class(image) == "magick-image")
@@ -37,7 +38,11 @@ image_fragment <- function(image, pixel_size, levels, pixel_colour = "white") {
   image_sections <- mapply(\(x, y) magick::image_crop(image, geometry = paste0(pixel_size, "x", pixel_size, "+", x, "+", y)),
                            gridcombos$x, gridcombos$y)
 
-  filter_rows <- sapply(image_sections, \(x) any(as.vector(magick::image_data(x)) != "ff"))
+  if (background_detect) {
+    filter_rows <- sapply(image_sections, \(x) any(as.vector(magick::image_data(x)) != "ff"))
+  } else {
+    filter_rows <- rep(T, nrow(image_sections))
+  }
 
   # Filter out empty squares, shuffle order of remaining ones
   img_squares <- dplyr::slice(gridcombos[filter_rows,], sample(1:(dplyr::n())))
@@ -52,7 +57,7 @@ image_fragment <- function(image, pixel_size, levels, pixel_colour = "white") {
   # Denote which frag level each circle will be visible in
   vis_squares <- img_squares
   vis_squares$vis_level <- c(rep(0, nrow(img_squares)-sum(n_vis_diffs)),
-                             unlist(mapply(function(x, y) rep(x, y), 1:length(n_vis_diffs), n_vis_diffs)))
+                             unlist(mapply(\(x, y) rep(x, y), 1:length(n_vis_diffs), n_vis_diffs)))
 
   # Filter image sections with vis level 0 (initially visible at highest fragmentation level)
   # and then split by group into separate list items
@@ -73,5 +78,5 @@ image_fragment <- function(image, pixel_size, levels, pixel_colour = "white") {
     fragmented_images[[i+1]] <- tmp_image
   }
 
-  return(fragmented_images)
+  return(rev(fragmented_images))
 }
