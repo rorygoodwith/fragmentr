@@ -6,7 +6,7 @@ Fragmentr is an R package with one function, `image_fragment`, which copies an i
 ![image](https://user-images.githubusercontent.com/51744937/170519468-75da8789-abde-4e75-8126-0a89ed6893fc.png)
 
 
-These images are often used in cognitive psychology experiments where participants gradually reveal an obscured stimulus in an attempt to identify it at the highest level of obscurity possible (e.g. [Berry et al., 2017](https://www.jneurosci.org/content/jneuro/34/33/10963.full.pdf)).
+These images are often used in cognitive psychology experiments where participants gradually reveal an obscured stimulus in an attempt to identify it at the highest level of obscurity possible (e.g. [Berry et al., 2014](https://www.jneurosci.org/content/jneuro/34/33/10963.full.pdf)).
 
 ## Installation
 You can install Fragmentr with the following R code:
