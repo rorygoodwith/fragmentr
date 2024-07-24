@@ -11,4 +11,4 @@ These images are often used in cognitive psychology experiments where participan
 ## Installation
 You can install Fragmentr with the following R code:
 
-```devtools::install_github("roryspanton/fragmentr")```
+```devtools::install_github("rorygoodwith/fragmentr")```
